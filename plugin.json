@@ -1,0 +1,50 @@
+{
+  "name": "siyuan-plugin-rich-link",
+  "author": "Litchy",
+  "url": "https://github.com/2zzw/siyuan-plugin-rich-link",
+  "version": "0.1.0",
+  "minAppVersion": "3.1.12",
+  "backends": [
+    "windows",
+    "linux",
+    "darwin",
+    "docker",
+    "ios",
+    "android"
+  ],
+  "frontends": [
+    "desktop",
+    "mobile",
+    "browser-desktop",
+    "browser-mobile",
+    "desktop-window"
+  ],
+  "displayName": {
+    "en_US": "Rich-link cards",
+    "zh_CN": "富链接卡片"
+  },
+  "description": {
+    "en_US": "A plugin that extracts data from a linked site with reference to the 'craft' and displays the link in a card style.",
+    "zh_CN": "这是一个参考“craft样式”提取链接网站中数据，并以卡片的样式展示该链接的插件"
+  },
+  "readme": {
+    "default": "README.md",
+    "en_US": "README.md",
+    "zh_CN": "README_zh_CN.md"
+  },
+  "funding": {
+    "custom": [
+      "https://buymeacoffee.com/anarion"
+    ]
+  },
+  "keywords": [
+    "plugin",
+    "oembed",
+    "siyuan",
+    "twitter",
+    "metadata",
+    "bookmark",
+    "cards",
+    "link"
+  ]
+}

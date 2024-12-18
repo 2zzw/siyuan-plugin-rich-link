@@ -1,0 +1,51 @@
+---
+addTopBarIcon: Dodaj ikonę do górnego paska
+cancel: Anuluj
+save: Zapisz
+byeMenu: 'Żegnaj, Menu!'
+helloPlugin: 'Witaj, Wtyczko!'
+byePlugin: 'Żegnaj, Wtyczko!'
+showDialog: Pokaż okno dialogowe
+removedData: Dane usunięte
+confirmRemove: Potwierdzasz usunięcie danych w ${name}?
+insertEmoji: Wstaw emoji
+toggleOembed: Przełącz link Oembed
+toggleBookmarkCard: Przełącz kartę zakładki
+removeSpace: Usuń spację
+convertOembed: Konwertuj na link Oembed
+getTab: Wyświetl wszystkie otwarte karty w debuggerze
+name: Oembed
+hintTitle: O wtyczce
+
+insertURLDialogTitle: Wstaw URL
+settings:
+  name: Ustawienia
+  EnableDebug:
+    title: Włącz debugowanie
+    text: Włącz szczegółowe debugowanie, aby pomóc w rozwiązywaniu problemów
+  CatchClipboard:
+    title: Przechwytuj linki ze schowka
+    text: Automatycznie przekształcaj linki wklejane ze schowka
+  ClipboardConverter:
+    title: Wybierz typ konwersji przy wklejaniu
+    text: Jaki typ konwersji zastosować podczas wklejania linku ze schowka
+    options:
+      oembed: Oembed
+      bookmarkCard: Karta zakładki
+  OembedBlacklist:
+    title: Lista blokowanych domen
+    text: Lista domen do pominięcia przy konwersji (jedna na linię) (wymaga zaimplementowania)
+    placeholder: Wprowadź domeny do zablokowania
+  BookmarkCardBlacklist:
+    title: Lista blokowanych domen
+    text: Lista domen do pominięcia przy konwersji (jedna na linię) (wymaga zaimplementowania)
+    placeholder: Wprowadź domeny do zablokowania
+  BookmarkCustomCSS:
+    title: Własny CSS dla kart zakładek
+    text: Wprowadź własny CSS, aby dostosować wygląd zakładek. Możesz stylizować wszystkie klasy `kg-card-*` i `kg-bookmark-*`. Nie dodawaj znaczników <style>.
+    placeholder: Wprowadź własny CSS
+
+SettingGroups:
+  general: Ogólne
+  oembed: Oembed
+  bookmarkCard: Karta zakładki
