@@ -1,5 +1,5 @@
 import { Dialog, Protyle, showMessage } from "siyuan";
-import { CUSTOM_ATTRIBUTE, defaultBookmarkCardStyle } from "@/libs/const";
+import { CUSTOM_ATTRIBUTE, defaultBookmarkCardStyle, skeletonBookmarkCardStyle, skeletonMiddleBookmarkCardStyle } from "@/libs/const";
 import { LinkData } from "@/types/utils";
 import { logger } from "@/utils/logger";
 import { getURLMetadata } from "@/utils/metadata";
@@ -9,7 +9,6 @@ import { blank, getUrlFinalSegment, notBlank, regexp, stripNewlinesAndIndents, w
 import { forwardProxy, getBlockAttrs, setBlockAttrs, updateBlock } from "./api";
 import getOembed from "./oembed";
 import { progressStatus } from "@/utils/status";
-import { settings } from "./settings";
 
 export const generateBookmarkCard = async (config?: LinkData) => {
     let conf: LinkData = {
@@ -20,6 +19,7 @@ export const generateBookmarkCard = async (config?: LinkData) => {
         link: "",
         thumbnail: "",
         publisher: "",
+        date: "",
     };
     if (config) {
         Object.assign(conf, config);
@@ -27,14 +27,16 @@ export const generateBookmarkCard = async (config?: LinkData) => {
     const missingProps = ["title", "description", "icon", "author", "thumbnail", "publisher"].filter(
         (prop) => !conf[prop as keyof typeof conf]
     );
-    const css = stripNewlinesAndIndents(settings.get("BookmarkCustomCSS") || defaultBookmarkCardStyle);
+    const css = stripNewlinesAndIndents(defaultBookmarkCardStyle);
     logger.debug("CSS for bookmark card:", css)
 
     if (missingProps.length > 0) {
         try {
             const fetchedData = await getURLMetadata(conf.link);
-            logger.debug("getURLMetadata:", { link: conf.link, fetchedData });
-            if (!fetchedData) return;
+            if (!fetchedData) {
+                showMessage(i18n.failure);
+                return
+            };
             missingProps.forEach((prop) => {
                 if (!conf.title && prop === "title") conf.title = fetchedData.title;
                 if (!conf.description && prop === "description") conf.description = fetchedData.description;
@@ -42,6 +44,7 @@ export const generateBookmarkCard = async (config?: LinkData) => {
                 if (!conf.author && prop === "author") conf.author = fetchedData.author;
                 if (!conf.thumbnail && prop === "thumbnail") conf.thumbnail = fetchedData.thumbnail;
                 if (!conf.publisher && prop === "publisher") conf.publisher = fetchedData.publisher;
+                if (!conf.date && prop === "date") conf.date = fetchedData.date;
             });
         } catch (error) {
             logger.error("Failed to fetch metadata for link:", { error });
@@ -49,18 +52,6 @@ export const generateBookmarkCard = async (config?: LinkData) => {
     }
     try {
         if (conf.link) {
-            // const newConf = await microlinkScraper(conf.link);
-            // if (!newConf) return
-
-            // const {
-            //     url,
-            //     title,
-            //     image,
-            //     logo,
-            //     description,
-            //     author,
-            //     publisher,
-            // } = newConf;
             return `<div>
                         <style>${css}</style>
                         <main class="kg-card-main">
@@ -72,29 +63,29 @@ export const generateBookmarkCard = async (config?: LinkData) => {
                                             <div class="kg-bookmark-description">${conf.description || ""}</div>
                                             <div class="kg-bookmark-metadata">
                                                 <img class="kg-bookmark-icon" src="${conf.icon}" alt="Link icon" />
-                                                ${
-                                                    conf.author
-                                                        ? `<span class="kg-bookmark-author">${
-                                                                conf.author || ""
-                                                            }</span>`
-                                                        : ""
-                                                }
-                                                ${
-                                                    conf.publisher
-                                                        ? `<span class="kg-bookmark-publisher">${
-                                                                conf.publisher || ""
-                                                            }</span>`
-                                                        : ""
-                                                }
+                                                ${conf.author
+                    ? `<span class="kg-bookmark-author">${conf.author || ""
+                    }</span>`
+                    : ""
+                }
+                                                ${conf.publisher
+                    ? `<span class="kg-bookmark-publisher">${conf.publisher || ""
+                    }</span>`
+                    : ""
+                }
+                                                ${conf.date
+                    ? `<span class="kg-bookmark-publisher">${conf.date || "2024-10-53"
+                    }</span>`
+                    : ""
+                }
                                             </div>
                                         </div>
-                                        ${
-                                            conf.thumbnail
-                                                ? `<div class="kg-bookmark-thumbnail">
+                                        ${conf.thumbnail
+                    ? `<div class="kg-bookmark-thumbnail">
                                                 <img src="${conf.thumbnail || ""}" alt="Link thumbnail" />
                                             </div>`
-                                                : ""
-                                        }
+                    : ""
+                }
                                     </a>
                                 </div>
                             </div>
@@ -165,34 +156,6 @@ export const toggleBookmarkCard = async (protyle: Protyle): Promise<void> => {
     }
 };
 
-export const convertToBookmarkCard = async (id: string, link: string): Promise<void> => {
-    if (!id || !link) return;
-    logger.debug("Converting bookmark for id and link:", { id, link });
-
-    try {
-        const dom = await generateBookmarkCard({ link });
-        logger.debug("Generated bookmark card dom:", { dom });
-        if (!dom) return;
-        progressStatus(`Converting ${link}`)
-
-        const success = await updateBlock("dom", dom, id);
-
-        if (!success) {
-            throw new Error("Failed to update block");
-        }
-
-        await setBlockAttrs(id, { [CUSTOM_ATTRIBUTE]: link });
-        const element = getElementByBlockId(id);
-        logger.debug("Element ID to focus on after converting:", { element });
-        focusBlock(element);
-        logger.info("Block successfully updated to bookmark card");
-        showMessage("Link converted!");
-    } catch (error) {
-        logger.error("Failed to convert block to bookmark card:", { error });
-        throw error;
-    }
-};
-
 export const convertToOembed = async (id: string, link: string): Promise<void> => {
     if (!id || !link) return;
     logger.debug("Converting bookmark for id and link:", { id, link });
@@ -218,6 +181,58 @@ export const convertToOembed = async (id: string, link: string): Promise<void> =
         showMessage("Link converted!");
     } catch (error) {
         logger.error("Failed to convert block to oembed:", { error });
+        throw error;
+    }
+};
+export const convertToMiddleBookmarkCard = async (id: string, link: string): Promise<void> => {
+    if (!id || !link) return;
+    logger.debug("Converting bookmark for id and link:", { id, link });
+
+    try {
+        const skeletonDom = generateSkeletonScreen('middle');
+        await updateBlock("dom", skeletonDom, id);
+
+        const dom = await generateBookmarkCard({ link });
+
+        if (!dom) return;
+        progressStatus(`Converting ${link}`)
+        const success = await updateBlock("dom", dom, id);
+        if (!success) {
+            throw new Error("Failed to update block");
+        }
+
+        await setBlockAttrs(id, { [CUSTOM_ATTRIBUTE]: link });
+        const element = getElementByBlockId(id);
+        logger.debug("Element ID to focus on after converting:", { element });
+        focusBlock(element);
+        logger.info("Block successfully updated to bookmark card");
+        showMessage("Link converted!");
+    } catch (error) {
+        logger.error("Failed to convert block to bookmark card:", { error });
+        throw error;
+    }
+};
+export const convertToBookmarkCard = async (id: string, link: string): Promise<void> => {
+    if (!id || !link) return;
+
+    try {
+        const skeletonDom = generateSkeletonScreen('normal');
+        await updateBlock("dom", skeletonDom, id);
+        const dom = await generateBookmarkCard({ link });
+        if (!dom) return;
+        progressStatus(`Converting ${link}`)
+        const success = await updateBlock("dom", dom, id);
+
+        if (!success) {
+            throw new Error("Failed to update block");
+        }
+
+        await setBlockAttrs(id, { [CUSTOM_ATTRIBUTE]: link });
+        const element = getElementByBlockId(id);
+        focusBlock(element);
+        showMessage(i18n.success);
+    } catch (error) {
+        logger.error("Failed to convert block to bookmark card:", { error });
         throw error;
     }
 };
@@ -375,3 +390,44 @@ export const fetchUrlTitle = async (url: string): Promise<string> => {
         return "";
     }
 };
+
+export const generateSkeletonScreen = (type: string) => {
+    const css = type === 'middle' ? stripNewlinesAndIndents(skeletonBookmarkCardStyle) : stripNewlinesAndIndents(skeletonMiddleBookmarkCardStyle);
+    const middleCard =
+        `<div>
+        <main>
+            <style>
+                ${css}
+            </style>
+            <div class="skeleton">
+                <div class="skeleton-header"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                </div>
+            </div>
+        </main>
+    </div>`
+    const normalCard = `
+<div>
+    <style>
+        ${css}
+    </style>
+    <main class="kg-card-main">
+        <div class="card loading">
+            <div class="content">
+                <h4></h4>
+                <div class="description">
+                </div>
+                <div class="image">
+                </div>
+            </div>
+        </div>
+    </main>
+</div>`
+    const dom = type === 'middle' ? middleCard : normalCard
+    return dom;
+}
+
+

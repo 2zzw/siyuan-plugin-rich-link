@@ -1,6 +1,6 @@
 import { IToolbarItem } from "siyuan";
 
-export const BlockType2NodeType: {[key in BlockType]: string} = {
+export const BlockType2NodeType: { [key in BlockType]: string } = {
     d: 'NodeDocument',
     p: 'NodeParagraph',
     query_embed: 'NodeBlockQueryEmbed',
@@ -213,7 +213,7 @@ export const defaultBookmarkCardStyle = `
             min-width: 33%;
         }
         .kg-bookmark-thumbnail img {
-            /* width: 100%; */
+            width: 100%;
             height: 100%;
             object-fit: cover;
             /* or contain */
@@ -222,3 +222,140 @@ export const defaultBookmarkCardStyle = `
             left: 0;
             border-radius: 0 2px 2px 0;
         }`;
+
+export const skeletonBookmarkCardStyle = `
+.skeleton {
+    width: 300px;
+    padding: 20px;
+    background-color: #f6f7f8;
+  }
+  .skeleton-header {
+    width: 100%;
+    height: 200px;
+    background-color: #e0e0e0;
+  }
+  .skeleton-body .skeleton-line {
+    width: 100%;
+    height: 20px;
+    margin-top: 20px;
+    background-color: #e0e0e0;
+  }
+  @keyframes shimmer {
+    0% {
+      background-position: -468px 0;
+    }
+    100% {
+      background-position: 468px 0;
+    }
+  }
+  
+  .skeleton-header, .skeleton-body .skeleton-line {
+    animation-duration: 1.25s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: shimmer;
+    animation-timing-function: linear;
+    background: #f6f7f8;
+    background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+    background-size: 800px 104px;
+    position: relative;
+  }@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.skeleton-header, .skeleton-body .skeleton-line {
+  animation-duration: 1.25s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: shimmer;
+  animation-timing-function: linear;
+  background: #f6f7f8;
+  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+  background-size: 800px 104px;
+  position: relative;
+}`
+
+export const skeletonMiddleBookmarkCardStyle = `
+.kg-card-main {
+  --loading-grey: #ededed;
+  background-color: #f6f6f6;
+  font-family: Helvetica;
+  font-size: 15px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  min-height: 150px;
+}
+
+.card {
+  width: 800px;
+  background-color: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, .12);
+}
+
+.image {
+  height: 100%;
+  width :200px
+}
+
+.image img {
+  display: block;
+  width: 100%;
+  height: inherit;
+  object-fit: cover;
+}
+
+.content {
+  padding: 2rem 1.8rem;
+}
+
+h4 {
+  margin: 0 0 1rem;
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.4rem;
+}
+
+.loading .image,
+.loading h4,
+.loading .description {
+  background-color: var(--loading-grey);
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, .5) 50%,
+    rgba(255, 255, 255, 0) 60%
+  ) var(--loading-grey);
+  background-size: 200% 100%;
+  background-position-x: 180%;
+  animation: 1s loading ease-in-out infinite;
+}
+
+@keyframes loading {
+  to {
+    background-position-x: -20%;
+  }
+}
+
+.loading h4 {
+  min-height: 1.6rem;
+  border-radius: 4px;
+  animation-delay: .05s;
+}
+
+.loading .description {
+  min-height: 4rem;
+  border-radius: 4px;
+  animation-delay: .06s;
+}`

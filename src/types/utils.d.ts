@@ -6,4 +6,5 @@ export interface LinkData {
     link: string;
     thumbnail?: string;
     publisher?: string;
+    date?:string;
 }

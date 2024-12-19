@@ -1,4 +1,4 @@
-import { convertToBookmarkCard, convertToOembed, processSelectedBlocks, toggleBookmarkCard, toggleOembed } from "./convert";
+import { convertToBookmarkCard, convertToOembed, processSelectedBlocks, toggleBookmarkCard, toggleOembed,convertToMiddleBookmarkCard } from "./convert";
 import { i18n } from "./i18n";
 import { getBlocks } from "./utils/block";
 
@@ -10,18 +10,11 @@ export interface BlockIconTemplate {
 }
 
 export const SlashCommandTemplates = {
-    oembed: {
-        filter: ["oembed", "Oembed", "oe"],
-        icon: "iconOembed",
-        name: "Oembed",
-        template: `Ctrl+Shift+O`,
-        callback: toggleOembed,
-    },
     bookmarkCard: {
-        filter: ["card", "bookmark", "bk"],
+        filter: ["card", "bookmark", "bk","link"],
         icon: "iconLink",
-        name: "Bookmark card",
-        template: `Ctrl+Shift+C`,
+        name: i18n.insertURLDialogTitle,
+        template: `Shift+3`,
         callback: toggleBookmarkCard,
     },
 };
@@ -30,17 +23,27 @@ export const ToolbarCommandsTemplates = {
     oembed: {
         name: "toggle-oembed",
         icon: "iconOembed",
-        hotkey: "⇧⌘O",
+        hotkey: "⇧1",
         tipPosition: "n",
         tip: i18n.toggleOembed,
         click: async () => {
             await processSelectedBlocks(getBlocks(), convertToOembed);
         },
     },
+    middleBookmarkCard:{        
+        name: "toggle-middleBookmarkCard",
+        icon: "iconLink",
+        hotkey: "⇧2",
+        tipPosition: "n",
+        tip: i18n.toggleMiddleBookmarkCard,
+        click: async () => {
+            await processSelectedBlocks(getBlocks(), convertToMiddleBookmarkCard);
+        },
+    },
     bookmarkCard: {
         name: "toggle-bookmarkCard",
         icon: "iconLink",
-        hotkey: "⇧⌘C",
+        hotkey: "⇧3",
         tipPosition: "n",
         tip: i18n.toggleBookmarkCard,
         click: async () => {
@@ -55,6 +58,12 @@ export const createBlockIconConfig = (): BlockIconTemplate[] => [
         icon: "iconOembed",
         label: i18n.toggleOembed,
         handler: convertToOembed,
+    },
+    {
+        id: "toggle-middleBookmarkCard",
+        icon: "iconLink",
+        label: i18n.toggleMiddleBookmarkCard,
+        handler: convertToMiddleBookmarkCard,
     },
     {
         id: "toggle-bookmarkCard",

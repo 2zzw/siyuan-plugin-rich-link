@@ -167,3 +167,61 @@ except for when immediately preceeded by a heading */
     left: 0;
     border-radius: 0 2px 2px 0;
 }
+
+
+/* skeleton */
+.skeleton {
+    width: 300px;
+    padding: 20px;
+    background-color: #f6f7f8;
+  }
+  .skeleton-header {
+    width: 100%;
+    height: 200px;
+    background-color: #e0e0e0;
+  }
+  .skeleton-body .skeleton-line {
+    width: 100%;
+    height: 20px;
+    margin-top: 20px;
+    background-color: #e0e0e0;
+  }
+  @keyframes shimmer {
+    0% {
+      background-position: -468px 0;
+    }
+    100% {
+      background-position: 468px 0;
+    }
+  }
+  
+  .skeleton-header, .skeleton-body .skeleton-line {
+    animation-duration: 1.25s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: shimmer;
+    animation-timing-function: linear;
+    background: #f6f7f8;
+    background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+    background-size: 800px 104px;
+    position: relative;
+  }@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.skeleton-header, .skeleton-body .skeleton-line {
+  animation-duration: 1.25s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: shimmer;
+  animation-timing-function: linear;
+  background: #f6f7f8;
+  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+  background-size: 800px 104px;
+  position: relative;
+}

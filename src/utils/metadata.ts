@@ -16,6 +16,7 @@ export const getURLMetadata = async (
         link: url,
         thumbnail: '',
         publisher: '',
+        date:'',
     };
 
     if (!(url.startsWith("http") || url.startsWith("https"))) {
@@ -61,6 +62,7 @@ export const getURLMetadata = async (
             author: metadata?.result?.author || null,
             publisher:
                 metadata?.result?.ogArticlePublisher || metadata?.result?.dcPublisher || metadata?.result?.ogSiteName || null,
+            date: metadata?.result.ogDate || null
         };
 
         linkData = {
@@ -71,6 +73,7 @@ export const getURLMetadata = async (
             link: url,
             thumbnail: metadataResult.thumbnail,
             publisher: metadataResult.publisher,
+            date:metadataResult.date,
         };
 
         const doc = new DOMParser().parseFromString(html, "text/html");
@@ -83,10 +86,10 @@ export const getURLMetadata = async (
                         doc.title ||
                         "N/A";
 
-        if (!linkData.description)
+
             linkData.description =
-                doc.querySelector('meta[property="og:description"]')?.getAttribute("content") ||
-                        doc.querySelector('meta[name="description"]')?.getAttribute("content") ||
+                doc.querySelector('meta[name="description"]')?.getAttribute("content") ||
+                        doc.querySelector('meta[name="og:description"]')?.getAttribute("content") ||
                         "N/A";
 
         if (!linkData.icon) {
@@ -115,6 +118,14 @@ export const getURLMetadata = async (
         if (!linkData.publisher)
             linkData.publisher =
                 doc.querySelector('meta[name="publisher"]')?.getAttribute("content") ||
+                doc.querySelector('meta[property="og:site_name"]')?.getAttribute("content") ||
+                new URL(url).origin ||
+                null;
+        logger.debug("Metadata (linkdata)", { linkData });
+
+        if (!linkData.date)
+            linkData.date =
+                doc.querySelector('meta[itemprop="uploadDate"]')?.getAttribute("content") ||
                 doc.querySelector('meta[property="og:site_name"]')?.getAttribute("content") ||
                 new URL(url).origin ||
                 null;
