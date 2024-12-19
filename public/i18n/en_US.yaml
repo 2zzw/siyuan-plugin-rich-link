@@ -10,12 +10,16 @@ removedData: Data deleted
 confirmRemove: Confirm to delete the data in ${name}?
 insertEmoji: Insert Emoji
 toggleOembed: Toggle Oembed Link
+toggleMiddleBookmarkCard: Toggle Middle Bookmark Card
 toggleBookmarkCard: Toggle Bookmark Card
 removeSpace: Remove Space
 convertOembed: Convert to Oembed Link
 getTab: Print out all opened custom tabs in the debugger
 name: Oembed
 hintTitle: About
+success: Success
+failure: Failure
+
 
 insertURLDialogTitle: Insert URL
 settings:

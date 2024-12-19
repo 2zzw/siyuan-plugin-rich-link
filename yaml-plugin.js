@@ -1,12 +1,3 @@
-/*
- * Copyright (c) 2024 by frostime. All Rights Reserved.
- * @Author       : frostime
- * @Date         : 2024-04-05 21:27:55
- * @FilePath     : /yaml-plugin.js
- * @LastEditTime : 2024-04-05 22:53:34
- * @Description  : 去妮玛的 json 格式，我就是要用 yaml 写 i18n
- *               : 不许骂人！
- */
 // plugins/vite-plugin-parse-yaml.js
 import fs from 'fs';
 import yaml from 'js-yaml';

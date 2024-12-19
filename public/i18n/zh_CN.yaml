@@ -9,15 +9,18 @@ showDialog: 显示对话框
 removedData: 数据已删除
 confirmRemove: 确认要删除 ${name} 的数据吗?
 insertEmoji: 插入Emoji
-toggleOembed: 切换嵌入链接
-toggleBookmarkCard: 切换书签卡片
+toggleOembed: 切换为文本链接
+toggleMiddleBookmarkCard: 切换为卡片书签
+toggleBookmarkCard: 切换为标准书签
 removeSpace: 移除空格
 convertOembed: 转换成嵌入链接
 getTab: 在调试器中打印所有打开的自定义选项卡
-name: Oembed
+name: 卡片链接
 hintTitle: 关于
+success: 成功
+failure: 失败
 
-insertURLDialogTitle: 插入链接
+insertURLDialogTitle: 生成卡片链接
 settings:
   name: 设置
   EnableDebug:

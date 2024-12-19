@@ -1,11 +1,3 @@
-/*
- * Copyright (c) 2024 by frostime. All Rights Reserved.
- * @Author       : frostime
- * @Date         : 2023-05-19 19:49:13
- * @FilePath     : /svelte.config.js
- * @LastEditTime : 2024-04-19 19:01:55
- * @Description  : 
- */
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte"
 
 const NoWarns = new Set([
