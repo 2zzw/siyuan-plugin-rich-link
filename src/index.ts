@@ -7,11 +7,10 @@ import {
     IMenuItemOption,
     getBackend,
 } from "siyuan";
-import {IMenuItem} from "siyuan/types";
+import { IMenuItem } from "siyuan/types";
 import "@/index.scss";
 
 import { BlockIconTemplate, createBlockIconConfig, SlashCommandTemplates, ToolbarCommandsTemplates } from "./config";
-import { builtinEditTools } from "@/libs/const";
 import { processSelectedBlocks } from "./convert";
 import { setPlugin } from "@/utils/plugin";
 import { logger } from "./utils/logger";
@@ -25,7 +24,7 @@ export default class OembedPlugin extends Plugin {
     init() {
         setPlugin(this);
     }
-    
+
     updateProtyleToolbar(toolbar: Array<string | IMenuItem>) {
         toolbar.push(...Object.values(ToolbarCommandsTemplates))
         return toolbar;
@@ -90,7 +89,7 @@ export default class OembedPlugin extends Plugin {
         return {
             ...template,
             click: async () => {
-                await processSelectedBlocks(blockElements, template.handler);
+                await processSelectedBlocks(blockElements, template.handler, template.id == 'toggle-oembed' ? 'oembed' : template.id == 'toggle-middleBookmarkCard' ? 'middle' : 'normal');
             },
         };
     }

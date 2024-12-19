@@ -13,7 +13,7 @@ type Provider = {
 type Providers = Array<Provider>
 
 type Config = {
-    params?: {[key: string]: unknown}
+    params?: { [key: string]: unknown }
 }
 
 type OEmbedData = {
@@ -87,39 +87,37 @@ const oembedConfig = ({ provider }: { url: string; provider: { provider_name: st
     return { params: {} };
 };
 
-export const getOembed = async (urlString: string ): Promise<string> => {
-        const result = await getProviderEndpointURLForURL(urlString)
-        logger.debug("Provider endpoint:", { result });
+export const getOembed = async (urlString: string): Promise<string> => {
+    const result = await getProviderEndpointURLForURL(urlString)
+    if (!result) return null
 
-        if (!result) return null
+    const { provider, endpoint } = result
 
-        const {provider, endpoint} = result
+    const url = new URL(endpoint.includes("{format}")
+        ? endpoint.replace("{format}", "json")
+        : endpoint);
 
-        const url = new URL(endpoint.includes("{format}")
-            ? endpoint.replace("{format}", "json")
-            : endpoint);
+    url.searchParams.set('url', urlString)
 
-        url.searchParams.set('url', urlString)
+    const config = oembedConfig({ url: urlString, provider });
+    for (const [key, value] of Object.entries(config.params ?? {})) {
+        url.searchParams.set(key, String(value));
+    }
 
-        const config = oembedConfig({ url: urlString, provider });
-        for (const [key, value] of Object.entries(config.params ?? {})) {
-            url.searchParams.set(key, String(value));
-        }
+    // format has to be json so it is not configurable
+    url.searchParams.set('format', 'json')
 
-        // format has to be json so it is not configurable
-        url.searchParams.set('format', 'json')
+    let data: OEmbedData | null = null;
+    try {
+        const responseBody = await fetchWithProxy(url.toString());
 
-        let data: OEmbedData | null = null;
-        try {
-            const responseBody = await fetchWithProxy(url.toString());
+        data = JSON.parse(responseBody) as OEmbedData;
+        logger.debug("Oembed data:", { data });
+    } catch (error) {
+        logger.error("Error fetching oembed data:", { error });
+    }
 
-            data = JSON.parse(responseBody) as OEmbedData;
-            logger.debug("Oembed data:", { data });
-        } catch (error) {
-            logger.error("Error fetching oembed data:", { error });
-        }
-
-        return data?.html ?? null
+    return data?.html ?? null
 }
 
 export default getOembed

@@ -1,4 +1,4 @@
-import { convertToBookmarkCard, convertToOembed, processSelectedBlocks, toggleBookmarkCard, toggleOembed,convertToMiddleBookmarkCard } from "./convert";
+import { convertToBookmarkCard, convertToOembed, processSelectedBlocks, toggleBookmarkCard, convertToMiddleBookmarkCard } from "./convert";
 import { i18n } from "./i18n";
 import { getBlocks } from "./utils/block";
 
@@ -11,7 +11,7 @@ export interface BlockIconTemplate {
 
 export const SlashCommandTemplates = {
     bookmarkCard: {
-        filter: ["card", "bookmark", "bk","link"],
+        filter: ["card", "bookmark", "bk", "link"],
         icon: "iconLink",
         name: i18n.insertURLDialogTitle,
         template: `Shift+3`,
@@ -27,17 +27,17 @@ export const ToolbarCommandsTemplates = {
         tipPosition: "n",
         tip: i18n.toggleOembed,
         click: async () => {
-            await processSelectedBlocks(getBlocks(), convertToOembed);
+            await processSelectedBlocks(getBlocks(), convertToOembed, 'oembed');
         },
     },
-    middleBookmarkCard:{        
+    middleBookmarkCard: {
         name: "toggle-middleBookmarkCard",
         icon: "iconLink",
         hotkey: "⇧2",
         tipPosition: "n",
         tip: i18n.toggleMiddleBookmarkCard,
         click: async () => {
-            await processSelectedBlocks(getBlocks(), convertToMiddleBookmarkCard);
+            await processSelectedBlocks(getBlocks(), convertToMiddleBookmarkCard, 'middle');
         },
     },
     bookmarkCard: {
@@ -47,7 +47,7 @@ export const ToolbarCommandsTemplates = {
         tipPosition: "n",
         tip: i18n.toggleBookmarkCard,
         click: async () => {
-            await processSelectedBlocks(getBlocks(), convertToBookmarkCard);
+            await processSelectedBlocks(getBlocks(), convertToBookmarkCard, 'normal');
         },
     },
 };

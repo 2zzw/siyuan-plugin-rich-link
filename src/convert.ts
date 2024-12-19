@@ -158,26 +158,18 @@ export const toggleBookmarkCard = async (protyle: Protyle): Promise<void> => {
 
 export const convertToOembed = async (id: string, link: string): Promise<void> => {
     if (!id || !link) return;
-    logger.debug("Converting bookmark for id and link:", { id, link });
-
     try {
         const html = await getOembed(link);
-        logger.debug("Generated oembed html:", { html });
         if (!html) return;
         progressStatus(`Converting ${link}`);
-
         const wrappedHtml = wrapInDiv(html);
         const success = await updateBlock("dom", wrappedHtml, id);
-
         if (!success) {
             throw new Error("Failed to update block");
         }
-
         await setBlockAttrs(id, { [CUSTOM_ATTRIBUTE]: link });
         const element = getElementByBlockId(id);
-        logger.debug("Element ID to focus on after converting:", { element });
         focusBlock(element);
-        logger.info("Block successfully updated with oembed content");
         showMessage("Link converted!");
     } catch (error) {
         logger.error("Failed to convert block to oembed:", { error });
@@ -186,8 +178,6 @@ export const convertToOembed = async (id: string, link: string): Promise<void> =
 };
 export const convertToMiddleBookmarkCard = async (id: string, link: string): Promise<void> => {
     if (!id || !link) return;
-    logger.debug("Converting bookmark for id and link:", { id, link });
-
     try {
         const skeletonDom = generateSkeletonScreen('middle');
         await updateBlock("dom", skeletonDom, id);
@@ -269,10 +259,10 @@ export const toggleOembed = async (protyle: Protyle): Promise<void> => {
 
 export const processSelectedBlocks = async (
     blocks: HTMLElement[],
-    processor: (id: string, link: string) => Promise<void>
+    processor: (id: string, link: string) => Promise<void>,
+    type : string ='normal'
 ) => {
     let link: string = null;
-    logger.debug("Processing blocks:", { blocks });
     try {
         const promises = blocks.map(async (item: HTMLElement) => {
             const id = item?.dataset.nodeId;
@@ -291,7 +281,7 @@ export const processSelectedBlocks = async (
                     logger.debug("Block is not empty, checking if this is our link");
                     const isOembed = await isOembedLink(id);
 
-                    if (isOembed) {
+                    if (isOembed && type === 'oembed') {
                         // toggle the link back if it had been previously converted
                         logger.debug("This is our link previously converted!");
                         const attrs = await getBlockAttrs(id);
