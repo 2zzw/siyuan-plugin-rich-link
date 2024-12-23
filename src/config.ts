@@ -27,7 +27,7 @@ export const ToolbarCommandsTemplates = {
         tipPosition: "n",
         tip: i18n.toggleOembed,
         click: async () => {
-            await processSelectedBlocks(getBlocks(), convertToOembed, 'oembed');
+            await processSelectedBlocks(getBlocks(), convertToOembed);
         },
     },
     middleBookmarkCard: {
@@ -37,7 +37,7 @@ export const ToolbarCommandsTemplates = {
         tipPosition: "n",
         tip: i18n.toggleMiddleBookmarkCard,
         click: async () => {
-            await processSelectedBlocks(getBlocks(), convertToMiddleBookmarkCard, 'middle');
+            await processSelectedBlocks(getBlocks(), convertToMiddleBookmarkCard);
         },
     },
     bookmarkCard: {
@@ -47,7 +47,7 @@ export const ToolbarCommandsTemplates = {
         tipPosition: "n",
         tip: i18n.toggleBookmarkCard,
         click: async () => {
-            await processSelectedBlocks(getBlocks(), convertToBookmarkCard, 'normal');
+            await processSelectedBlocks(getBlocks(), convertToBookmarkCard);
         },
     },
 };

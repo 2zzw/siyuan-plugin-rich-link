@@ -88,10 +88,14 @@ export const isEmptyParagraphBlock = (element: HTMLElement): boolean => {
 
 export const extractUrlFromBlock = (block: HTMLElement): string | null => {
     const editElement = block.querySelector<HTMLElement>('[contenteditable="true"]');
+    console.log(editElement);
     if (!editElement) return null;
 
     const linkElement = editElement.firstElementChild;
+    console.log(linkElement);
+
     if (!linkElement) return null;
+    console.log('linkElement.getAttribute("data-href")', linkElement.getAttribute("data-href"));
 
     return linkElement.getAttribute("data-type") === "a" ? linkElement.getAttribute("data-href") : null;
 };

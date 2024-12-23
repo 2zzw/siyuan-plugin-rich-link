@@ -90,7 +90,7 @@ export const NodeIcons = {
 };
 
 export const STORAGE_NAME = "menu-config";
-export const CUSTOM_ATTRIBUTE = "custom-oembed-link";
+export const CUSTOM_ATTRS_LINK = "custom-link";
 
 export const defaultBookmarkCardStyle = `
         .kg-card {

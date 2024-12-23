@@ -89,7 +89,7 @@ export default class OembedPlugin extends Plugin {
         return {
             ...template,
             click: async () => {
-                await processSelectedBlocks(blockElements, template.handler, template.id == 'toggle-oembed' ? 'oembed' : template.id == 'toggle-middleBookmarkCard' ? 'middle' : 'normal');
+                await processSelectedBlocks(blockElements, template.handler);
             },
         };
     }
