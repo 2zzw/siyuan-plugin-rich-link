@@ -134,11 +134,11 @@ export const defaultBookmarkCardStyle = `
         .kg-bookmark-card a.kg-bookmark-container:hover {
             display: flex;
             background: var(--bookmark-background-color);
-            text-decoration: none;
             border-radius: 6px;
             border: 1px solid rgb(124 139 154 / 25%);
             overflow: hidden;
             color: var(--bookmark-text-color);
+            text-decoration: none;
         }
         .kg-bookmark-content {
             display: flex;
@@ -224,68 +224,8 @@ export const defaultBookmarkCardStyle = `
         }`;
 
 export const skeletonBookmarkCardStyle = `
-.skeleton {
-    width: 300px;
-    padding: 20px;
-    background-color: #f6f7f8;
-  }
-  .skeleton-header {
-    width: 100%;
-    height: 200px;
-    background-color: #e0e0e0;
-  }
-  .skeleton-body .skeleton-line {
-    width: 100%;
-    height: 20px;
-    margin-top: 20px;
-    background-color: #e0e0e0;
-  }
-  @keyframes shimmer {
-    0% {
-      background-position: -468px 0;
-    }
-    100% {
-      background-position: 468px 0;
-    }
-  }
-  
-  .skeleton-header, .skeleton-body .skeleton-line {
-    animation-duration: 1.25s;
-    animation-fill-mode: forwards;
-    animation-iteration-count: infinite;
-    animation-name: shimmer;
-    animation-timing-function: linear;
-    background: #f6f7f8;
-    background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
-    background-size: 800px 104px;
-    position: relative;
-  }@keyframes shimmer {
-  0% {
-    background-position: -468px 0;
-  }
-  100% {
-    background-position: 468px 0;
-  }
-}
-
-.skeleton-header, .skeleton-body .skeleton-line {
-  animation-duration: 1.25s;
-  animation-fill-mode: forwards;
-  animation-iteration-count: infinite;
-  animation-name: shimmer;
-  animation-timing-function: linear;
-  background: #f6f7f8;
-  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
-  background-size: 800px 104px;
-  position: relative;
-}`
-
-export const skeletonMiddleBookmarkCardStyle = `
 .kg-card-main {
   --loading-grey: #ededed;
-  background-color: #f6f6f6;
-  font-family: Helvetica;
-  font-size: 15px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -294,7 +234,6 @@ export const skeletonMiddleBookmarkCardStyle = `
 
 .card {
   width: 800px;
-  background-color: #fff;
   border-radius: 6px;
   overflow: hidden;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, .12);
@@ -359,3 +298,120 @@ h4 {
   border-radius: 4px;
   animation-delay: .06s;
 }`
+
+export const skeletonMiddleBookmarkCardStyle = `
+         .kg-card-main {
+            --loading-grey: #ededed;
+            font-size: 14px;
+            min-height: 200px;
+            max-width: 250px;
+        }
+
+        .card {
+            width: 250px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, .12);
+        }
+
+        .card a {
+            color: var(--bookmark-text-color);
+            text-decoration: none;
+        }
+
+        .image {
+            height: 150px;
+        }
+        .image .img{
+            display: block;
+            width: 100%;
+            height: inherit;
+            object-fit: cover;
+        }
+        .content {
+            padding: 1rem 1rem 5px 1rem;
+        }
+
+        h4 {
+            margin: 0 0 10px;
+            font-size: 16px;
+            line-height: 1rem;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .description {
+            font-size: 14px;
+            line-height: 1.4rem;
+            color: #999999;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .footer {
+            margin-top: 10px;
+        }
+
+        .footer .icon {
+            width: 18px;
+            height: 18px;
+            border-radius: 5px;
+        }
+
+        .footer .author {
+            display: inline-block;
+            width: 120px;
+            color: #6b6f71;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .loadig .image{
+            height:150px;
+        }
+
+        .loading .image,
+        .loading h4,
+        .loading .description,
+        .loading .footer {
+            background-color: var(--loading-grey);
+            background: linear-gradient(100deg,
+                    rgba(255, 255, 255, 0) 40%,
+                    rgba(255, 255, 255, .5) 50%,
+                    rgba(255, 255, 255, 0) 60%) var(--loading-grey);
+            background-size: 200% 100%;
+            background-position-x: 180%;
+            animation: 1s loading ease-in-out infinite;
+        }
+
+        @keyframes loading {
+            to {
+                background-position-x: -20%;
+            }
+        }
+
+        .loading h4 {
+            min-height: 1.6rem;
+            border-radius: 4px;
+            animation-delay: .05s;
+        }
+
+        .loading .description {
+            min-height: 4rem;
+            border-radius: 4px;
+            animation-delay: .06s;
+        }
+
+        .loading .footer {
+            min-height: 1rem;
+            border-radius: 4px;
+            animation-delay: .07s;
+        }`

@@ -16,7 +16,7 @@ export const getURLMetadata = async (
         link: url,
         thumbnail: '',
         publisher: '',
-        date:'',
+        date: '',
     };
 
     if (!(url.startsWith("http") || url.startsWith("https"))) {
@@ -46,10 +46,7 @@ export const getURLMetadata = async (
             }
         });
         let html = data?.body;
-        logger.debug("Metadata html from proxy:", { url: url, metadata: html });
-        const metadata = await ogs({html});
-        logger.debug("Metadata for url:", { url: url, metadata: metadata });
-
+        const metadata = await ogs({ html });
         const metadataResult = {
             title: metadata?.result?.ogTitle || metadata?.result?.dcTitle || null,
             description: metadata?.result?.ogDescription || metadata?.result?.dcDescription || null,
@@ -73,7 +70,7 @@ export const getURLMetadata = async (
             link: url,
             thumbnail: metadataResult.thumbnail,
             publisher: metadataResult.publisher,
-            date:metadataResult.date,
+            date: metadataResult.date,
         };
 
         const doc = new DOMParser().parseFromString(html, "text/html");
@@ -81,26 +78,26 @@ export const getURLMetadata = async (
         if (!linkData.title)
             linkData.title =
                 doc.querySelector('meta[property="og:title"]')?.getAttribute("content") ||
-                        doc.querySelector("title")?.getAttribute("value") ||
-                        doc.querySelector("title")?.getAttribute("no-title") ||
-                        doc.title ||
-                        "N/A";
+                doc.querySelector("title")?.getAttribute("value") ||
+                doc.querySelector("title")?.getAttribute("no-title") ||
+                doc.title ||
+                "N/A";
 
 
-            linkData.description =
-                doc.querySelector('meta[name="description"]')?.getAttribute("content") ||
-                        doc.querySelector('meta[name="og:description"]')?.getAttribute("content") ||
-                        "N/A";
+        linkData.description =
+            doc.querySelector('meta[name="description"]')?.getAttribute("content") ||
+            doc.querySelector('meta[name="og:description"]')?.getAttribute("content") ||
+            "N/A";
 
         if (!linkData.icon) {
             const iconLink =
-            doc.querySelector('link[rel="icon"]')?.getAttribute("href") ||
+                doc.querySelector('link[rel="icon"]')?.getAttribute("href") ||
                 doc.querySelector('link[rel="shortcut icon"]')?.getAttribute("href") ||
                 doc.querySelector('link[rel="alternate icon"]')?.getAttribute("href") ||
                 doc.querySelector('link[rel="apple-touch-icon"]')?.getAttribute("href") ||
                 "https://static.ghost.org/v5.0.0/images/link-icon.svg";
-                linkData.icon = !iconLink.startsWith("http") ? new URL(iconLink, new URL(url).origin).href : iconLink;
-            }
+            linkData.icon = !iconLink.startsWith("http") ? new URL(iconLink, new URL(url).origin).href : iconLink;
+        }
         linkData.icon = !linkData.icon.startsWith("http")
             ? new URL(linkData.icon, new URL(url).origin).href
             : linkData.icon;
@@ -111,8 +108,8 @@ export const getURLMetadata = async (
             const thumbnailLink = doc.querySelector('meta[property="og:image"]')?.getAttribute("content") || null;
             linkData.thumbnail =
                 thumbnailLink && !thumbnailLink.startsWith("http")
-                ? new URL(thumbnailLink, new URL(url).origin).href
-                : thumbnailLink;
+                    ? new URL(thumbnailLink, new URL(url).origin).href
+                    : thumbnailLink;
         }
 
         if (!linkData.publisher)
@@ -132,9 +129,9 @@ export const getURLMetadata = async (
         logger.debug("Metadata (linkdata)", { linkData });
         return linkData;
 
-        } catch (ex) {
-            logger.error("Error fetching metadata:", { ex });
-    return null;
+    } catch (ex) {
+        logger.error("Error fetching metadata:", { ex });
+        return null;
     }
 };
 

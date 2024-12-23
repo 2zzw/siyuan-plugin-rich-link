@@ -10,7 +10,7 @@ import { forwardProxy, getBlockAttrs, setBlockAttrs, updateBlock } from "./api";
 import getOembed from "./oembed";
 import { progressStatus } from "@/utils/status";
 
-export const generateBookmarkCard = async (config?: LinkData) => {
+export const generateBookmarkCard = async (config?: LinkData, type?: string) => {
     let conf: LinkData = {
         title: "",
         description: "",
@@ -27,8 +27,7 @@ export const generateBookmarkCard = async (config?: LinkData) => {
     const missingProps = ["title", "description", "icon", "author", "thumbnail", "publisher"].filter(
         (prop) => !conf[prop as keyof typeof conf]
     );
-    const css = stripNewlinesAndIndents(defaultBookmarkCardStyle);
-    logger.debug("CSS for bookmark card:", css)
+    const css = type === 'normal' ? stripNewlinesAndIndents(defaultBookmarkCardStyle) : stripNewlinesAndIndents(skeletonMiddleBookmarkCardStyle);
 
     if (missingProps.length > 0) {
         try {
@@ -52,7 +51,8 @@ export const generateBookmarkCard = async (config?: LinkData) => {
     }
     try {
         if (conf.link) {
-            return `<div>
+            if (type === 'normal')
+                return `<div>
                         <style>${css}</style>
                         <main class="kg-card-main">
                             <div class="kg-card-outer">
@@ -64,33 +64,61 @@ export const generateBookmarkCard = async (config?: LinkData) => {
                                             <div class="kg-bookmark-metadata">
                                                 <img class="kg-bookmark-icon" src="${conf.icon}" alt="Link icon" />
                                                 ${conf.author
-                    ? `<span class="kg-bookmark-author">${conf.author || ""
-                    }</span>`
-                    : ""
-                }
+                        ? `<span class="kg-bookmark-author">${conf.author || ""
+                        }</span>`
+                        : ""
+                    }
                                                 ${conf.publisher
-                    ? `<span class="kg-bookmark-publisher">${conf.publisher || ""
-                    }</span>`
-                    : ""
-                }
+                        ? `<span class="kg-bookmark-publisher">${conf.publisher || ""
+                        }</span>`
+                        : ""
+                    }
                                                 ${conf.date
-                    ? `<span class="kg-bookmark-publisher">${conf.date || "2024-10-53"
-                    }</span>`
-                    : ""
-                }
+                        ? `<span class="kg-bookmark-publisher">${conf.date || "2024-10-53"
+                        }</span>`
+                        : ""
+                    }
                                             </div>
                                         </div>
                                         ${conf.thumbnail
-                    ? `<div class="kg-bookmark-thumbnail">
+                        ? `<div class="kg-bookmark-thumbnail">
                                                 <img src="${conf.thumbnail || ""}" alt="Link thumbnail" />
                                             </div>`
-                    : ""
-                }
+                        : ""
+                    }
                                     </a>
                                 </div>
                             </div>
                         </main>
                     </div>`;
+            else {
+                return stripNewlinesAndIndents(`    
+                <div>
+                    <style>
+                        ${css}
+                    </style>
+                    <main class="kg-card-main">
+                        <div class="card">
+                                <div class="image">
+                                    <img class="img" src="${conf.thumbnail || ''}" alt="">
+                                </div>
+                                <div class="content">
+                                    <h4>${conf.title}</h4>
+                                    <div class="description">
+                                        ${conf.description || ""}
+                                    </div>
+                                    <div class="footer">
+                                        <div>
+                                            <img class="icon" src="${conf.icon}" alt="">
+                                            <span class="author"> ${conf.author || ""}
+                                                ${conf.publisher || ""}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </main>
+                </div>`)
+            }
         }
     } catch (e) {
         logger.error(e);
@@ -181,10 +209,11 @@ export const convertToMiddleBookmarkCard = async (id: string, link: string): Pro
     try {
         const skeletonDom = generateSkeletonScreen('middle');
         await updateBlock("dom", skeletonDom, id);
-
-        const dom = await generateBookmarkCard({ link });
-
-        if (!dom) return;
+        const dom = await generateBookmarkCard({ link }, 'middle');
+        if (!dom) {
+            await updateBlock("dom", '', id);
+            return
+        };
         progressStatus(`Converting ${link}`)
         const success = await updateBlock("dom", dom, id);
         if (!success) {
@@ -208,8 +237,11 @@ export const convertToBookmarkCard = async (id: string, link: string): Promise<v
     try {
         const skeletonDom = generateSkeletonScreen('normal');
         await updateBlock("dom", skeletonDom, id);
-        const dom = await generateBookmarkCard({ link });
-        if (!dom) return;
+        const dom = await generateBookmarkCard({ link }, 'normal');
+        if (!dom) {
+            await updateBlock("dom", '', id);
+            return
+        };
         progressStatus(`Converting ${link}`)
         const success = await updateBlock("dom", dom, id);
 
@@ -260,7 +292,7 @@ export const toggleOembed = async (protyle: Protyle): Promise<void> => {
 export const processSelectedBlocks = async (
     blocks: HTMLElement[],
     processor: (id: string, link: string) => Promise<void>,
-    type : string ='normal'
+    type: string = 'normal'
 ) => {
     let link: string = null;
     try {
@@ -382,41 +414,25 @@ export const fetchUrlTitle = async (url: string): Promise<string> => {
 };
 
 export const generateSkeletonScreen = (type: string) => {
-    const css = type === 'middle' ? stripNewlinesAndIndents(skeletonBookmarkCardStyle) : stripNewlinesAndIndents(skeletonMiddleBookmarkCardStyle);
-    const middleCard =
-        `<div>
-        <main>
-            <style>
-                ${css}
-            </style>
-            <div class="skeleton">
-                <div class="skeleton-header"></div>
-                <div class="skeleton-body">
-                    <div class="skeleton-line"></div>
-                    <div class="skeleton-line"></div>
-                    <div class="skeleton-line"></div>
-                </div>
-            </div>
-        </main>
-    </div>`
-    const normalCard = `
+    const css = type === 'middle' ? stripNewlinesAndIndents(skeletonMiddleBookmarkCardStyle) : stripNewlinesAndIndents(skeletonBookmarkCardStyle);
+    const dom = `
 <div>
     <style>
         ${css}
     </style>
-    <main class="kg-card-main">
-        <div class="card loading">
-            <div class="content">
-                <h4></h4>
-                <div class="description">
-                </div>
+        <main class="kg-card-main">
+            <div class="card loading">
                 <div class="image">
                 </div>
+                <div class="content">
+                    <h4></h4>
+                    <div class="description">
+
+                    </div>
+                </div>
             </div>
-        </div>
-    </main>
+        </main>
 </div>`
-    const dom = type === 'middle' ? middleCard : normalCard
     return dom;
 }
 
